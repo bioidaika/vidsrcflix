@@ -8,6 +8,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class ApiService {
   private apiUrl = 'https://api.themoviedb.org/3';
+  private ytsUrl = 'https://yts.mx';
+  private eztvUrl = 'https://eztvx.to';
   private apiKey = ''; // your API key
   private language = 'en-US';
 
@@ -123,6 +125,17 @@ export class ApiService {
   search(query: string, page: number): Observable<any> {
     const params = this.buildParams({ query, page: page.toString() });
     return this.http.get(`${this.apiUrl}/search/multi`, { params })
+      .pipe(catchError(this.handleError));
+  }
+
+  getYtsMovies(imdbId: string): Observable<any> {
+    return this.http.get(`${this.ytsUrl}/api/v2/list_movies.json?query_term=${encodeURIComponent(imdbId)}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getEztvEpisodes(imdbId: string, page: number = 1, limit: number = 100): Observable<any> {
+    const eztvId = imdbId.toLocaleLowerCase().replace('tt', '')
+    return this.http.get(`${this.ytsUrl}/api/get-torrents?imdb_id=${encodeURIComponent(eztvId)}&limit=${limit}&page=${page}`)
       .pipe(catchError(this.handleError));
   }
 

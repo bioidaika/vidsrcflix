@@ -10,7 +10,8 @@ import { Router } from '@angular/router';
 })
 export class HeroComponent {
   @Input() data: any;
-
+  @Input() mediaType: string = '';
+  
   @ViewChild(ModalComponent) modal!: ModalComponent;
 
   constructor(private apiService: ApiService,
@@ -38,8 +39,8 @@ export class HeroComponent {
   }
 
   onBackdropClickd(data: any) {
-    if (data.imdb_id) {
-      this.router.navigate([`/watch/${data.imdb_id}`]);
+    if (this.mediaType === 'movie') {
+      this.router.navigate([`/watch/movie/${data.imdb_id}`]);
     }
   }
 }

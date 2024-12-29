@@ -11,7 +11,7 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
   opacity: number = 0;
   @Input() url!: string;
   @ViewChild('iframe') iframeRef!: ElementRef<HTMLIFrameElement>;
-  imdbid: any;
+  id: any;
   season: number | undefined;
   episode: number | undefined;
 
@@ -19,14 +19,14 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
     private dataService: DataService
   ) {
     this.route.params.subscribe(params => {
-      this.imdbid = params['imdbid'];
+      this.id = params['id'];
       this.season = params['season'] ? +params['season'] : undefined;
       this.episode = params['episode'] ? +params['episode'] : undefined;
       if (!this.season && !this.episode) {
-        this.url = `https://vidsrc.cc/v2/embed/movie/${this.imdbid}`;
+        this.url = `https://vidsrc.cc/v2/embed/movie/${this.id}`;
       }
       else {
-        this.url = `https://vidsrc.cc/v2/embed/tv/${this.imdbid}/${this.season}/${this.episode}`;
+        this.url = `https://vidsrc.cc/v2/embed/tv/${this.id}/${this.season}/${this.episode}`;
       }
       this.url = `${this.url}?autoPlay=true`;
     });
@@ -47,6 +47,7 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     const iframe = this.iframeRef.nativeElement;
     iframe.removeEventListener('load', this.handleIframeLoaded);
+    this.dataService.setHideNavAndFooter(false);
   }
 
   private handleIframeLoaded = () => {

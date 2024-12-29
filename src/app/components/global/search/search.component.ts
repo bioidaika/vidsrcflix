@@ -32,7 +32,7 @@ export class SearchComponent implements OnInit {
       (response: any) => {
         this.searchResults = response.results.map((item: any) => {
           return {
-            link: item.media_type === 'movie' ? `movie/${item.id}` : item.media_type === 'tv' ? `tv/${item.id}` : `person/${item.id}`,
+            link: this.getRouterLink(item),
             imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : '',
             title: item.title || item.name,
             rating: item.vote_average ? item.vote_average * 10 : 'N/A',
@@ -40,15 +40,23 @@ export class SearchComponent implements OnInit {
             poster_path: item.poster_path
           };
         });
+        console.log(this.searchResults);
       },
       error => {
         console.error('Search failed', error);
       }
     );
   }
-
-  onCardClick(link: string) {
-    this.router.navigateByUrl(link);
+  getRouterLink(item: any): string[] {
+    if (item.media_type === 'movie') {
+      return [`movie/${item.id.toString()}`];
+    } else if (item.media_type === 'tv') {
+      return [`tv/${item.id.toString()}`];
+    } else if (item.media_type === 'person') {
+      return [`person/${item.id.toString()}`];
+    } else {
+      return ['/'];
+    }
   }
 }
 

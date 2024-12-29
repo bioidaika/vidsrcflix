@@ -43,8 +43,6 @@ export class NavbarComponent {
     this.router.navigate(['/']); 
   }
 
-  
-
   goToRoute(): void {
     if (this.query.trim()) {
       this.router.navigate(['/search'], { queryParams: { query: this.query } });

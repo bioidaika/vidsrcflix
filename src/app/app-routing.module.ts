@@ -58,11 +58,11 @@ const routes: Routes = [
     component: SearchComponent
   },
   {
-    path: 'watch/:imdbid',
+    path: 'watch/movie/:id',
     component: WatchComponent
   },
   {
-    path: 'watch/:imbdb/:season/:episode',
+    path: 'watch/tv/:id/:season/:episode',
     component: WatchComponent
   },
   {

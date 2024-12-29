@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ApiService } from '../../../api/api.service';
 
@@ -14,10 +14,13 @@ export class EpisodesComponent implements OnInit {
   selectedSeason: number = 1;
   seasons: any[] = [];
 
-  constructor(private apiService: ApiService, private router: ActivatedRoute, private spinner: NgxSpinnerService) { }
+  constructor(private apiService: ApiService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private spinner: NgxSpinnerService) { }
 
   ngOnInit() {
-    this.router.params.subscribe((params: Params) => {
+    this.route.params.subscribe((params: Params) => {
       this.spinner.show();
       this.id = +params['id'];
 
@@ -36,9 +39,9 @@ export class EpisodesComponent implements OnInit {
 
   handleTvInfo(result: any) {
     this.seasons = result.seasons.filter((season: any) => season.season_number !== 0);
-    
+
     this.selectedSeason = this.seasons.length > 0 ? this.seasons[0].season_number : 1;
-    
+
     this.loadEpisodes(this.id, this.selectedSeason);
   }
 
@@ -57,5 +60,9 @@ export class EpisodesComponent implements OnInit {
   onSeasonChange(event: any): void {
     const selectedSeason = event.target.value;
     this.loadEpisodes(this.id, selectedSeason);
+  }
+
+  onEpisodeClicked(episode: any) {
+    this.router.navigate([`/watch/tv/${this.id}/${episode.season_number}/${episode.episode_number}`]);
   }
 }
