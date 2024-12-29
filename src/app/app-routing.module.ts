@@ -10,6 +10,7 @@ import { MovieCategoryComponent } from './components/movie-category/movie-catego
 import { TvCategoryComponent } from './components/tv-category/tv-category.component';
 import { GenreComponent } from './components/genre/genre.component';
 import { SearchComponent } from './components/global/search/search.component';
+import { WatchComponent } from './components/watch/watch.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,14 @@ const routes: Routes = [
   {
     path: 'search',
     component: SearchComponent
+  },
+  {
+    path: 'watch/:imdbid',
+    component: WatchComponent
+  },
+  {
+    path: 'watch/:imbdb/:season/:episode',
+    component: WatchComponent
   },
   {
     path: '**',
