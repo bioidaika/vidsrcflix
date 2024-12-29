@@ -1,5 +1,6 @@
 import { Component, HostListener, ViewChild, ElementRef } from '@angular/core';
 import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -9,10 +10,18 @@ import { Router } from '@angular/router';
 export class NavbarComponent {
   searchVisible = false;
   query: string = '';
+  private searchSubject: Subject<string> = new Subject<string>();
 
   @ViewChild('input') inputElement!: ElementRef;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router) {
+    this.searchSubject.pipe(
+      debounceTime(500), // Adjust debounce time as needed
+      distinctUntilChanged() // Ignore consecutive identical values
+    ).subscribe((searchQuery) => {
+      this.performNavigation(searchQuery);
+    });
+  }
 
   ngAfterViewInit(): void {
     if (this.searchVisible && this.inputElement) {
@@ -43,16 +52,20 @@ export class NavbarComponent {
   }
 
   goToRoute(): void {
-    if (this.query.trim()) {
-      this.router.navigate(['/search'], { queryParams: { query: this.query } });
-    }else{
-      this.router.navigate(['/']);
-    }
+    this.searchSubject.next(this.query); // Emit the current query for debouncing
   }
 
   goBack(): void {
     this.query = '';
     this.router.navigate(['/']);
+  }
+
+  private performNavigation(query: string): void {
+    if (query.trim()) {
+      this.router.navigate(['/search'], { queryParams: { query } });
+    } else {
+      this.router.navigate(['/']);
+    }
   }
 
   // unFocus(event: FocusEvent): void {
