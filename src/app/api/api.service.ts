@@ -135,7 +135,7 @@ export class ApiService {
 
   getEztvEpisodes(imdbId: string, page: number = 1, limit: number = 100): Observable<any> {
     const eztvId = imdbId.toLocaleLowerCase().replace('tt', '')
-    return this.http.get(`${this.ytsUrl}/api/get-torrents?imdb_id=${encodeURIComponent(eztvId)}&limit=${limit}&page=${page}`)
+    return this.http.get(`${this.eztvUrl}/api/get-torrents?imdb_id=${encodeURIComponent(eztvId)}&limit=${limit}&page=${page}`)
       .pipe(catchError(this.handleError));
   }
 
