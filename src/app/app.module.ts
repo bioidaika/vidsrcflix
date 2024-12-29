@@ -48,6 +48,7 @@ import { LanguageNamePipe } from './components/global/pipe/language-name.pipe';
 import { EpisodesComponent } from './components/global/episodes/episodes.component';
 import { ModalComponent } from './components/global/modal/modal.component';
 import { SafeUrlPipe } from './components/global/pipe/safe-url.pipe';
+import { WatchComponent } from './components/watch/watch.component';
 
 @NgModule({
   declarations: [
@@ -88,6 +89,7 @@ import { SafeUrlPipe } from './components/global/pipe/safe-url.pipe';
     EpisodesComponent,
     ModalComponent,
     SafeUrlPipe,
+    WatchComponent,
   ],
   imports: [
     BrowserModule,
