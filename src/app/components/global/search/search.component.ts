@@ -47,15 +47,15 @@ export class SearchComponent implements OnInit {
       }
     );
   }
-  getRouterLink(item: any): string[] {
+  getRouterLink(item: any): string {
     if (item.media_type === 'movie') {
-      return [`movie/${item.id.toString()}`];
+      return `/movie/${item.id.toString()}`;
     } else if (item.media_type === 'tv') {
-      return [`tv/${item.id.toString()}`];
+      return `/tv/${item.id.toString()}`;
     } else if (item.media_type === 'person') {
-      return [`person/${item.id.toString()}`];
+      return `/person/${item.id.toString()}`;
     } else {
-      return ['/'];
+      return '/';
     }
   }
 }

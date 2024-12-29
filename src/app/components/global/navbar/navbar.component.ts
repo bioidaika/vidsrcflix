@@ -31,16 +31,15 @@ export class NavbarComponent {
     setTimeout(() => {
       if (this.inputElement && this.inputElement.nativeElement) {
         this.inputElement.nativeElement.focus();
-        this.inputElement.nativeElement.select(); // Select any existing text, ensuring cursor visibility
+        this.inputElement.nativeElement.select();
       }
-    }, 100); // Delay slightly longer to ensure rendering is complete
+    }, 100);
   }
 
 
   closeSearch(): void {
     this.searchVisible = false;
     this.query = '';
-    this.router.navigate(['/']); 
   }
 
   goToRoute(): void {
@@ -63,7 +62,7 @@ export class NavbarComponent {
   // }
 
   unFocus(event: FocusEvent): void {
-    //this.closeSearch(); // Close the search and clear the query
+    this.closeSearch(); // Close the search and clear the query
   }
 
   onSubmit(event: Event): void {
