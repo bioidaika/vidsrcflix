@@ -65,7 +65,7 @@ export class NavbarComponent {
   // }
 
   unFocus(event: FocusEvent): void {
-    this.closeSearch(); // Close the search and clear the query
+    //this.closeSearch(); // Close the search and clear the query
   }
 
   onSubmit(event: Event): void {

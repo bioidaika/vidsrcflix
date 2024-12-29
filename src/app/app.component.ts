@@ -5,6 +5,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { DataService } from './api/data.service';
 
 @Component({
   selector: 'app-root',
@@ -24,8 +25,13 @@ import { filter } from 'rxjs/operators';
 })
 export class AppComponent implements OnInit {
   searchOpen$!: Observable<boolean>; // Observable for searchOpen
+  hideNav!: boolean;
+  hideFooter!: boolean;
 
-  constructor(private spinner: NgxSpinnerService, private router: Router) {}
+  constructor(private spinner: NgxSpinnerService, 
+    private router: Router,
+    private dataService: DataService
+  ) {}
 
   ngOnInit() {
     // reset page while clicking
@@ -40,5 +46,10 @@ export class AppComponent implements OnInit {
     setTimeout(() => {
       this.spinner.hide();
     }, 2000);
+
+    this.dataService.hideNavAndFooter$.subscribe(state => {
+      this.hideNav = state;
+      this.hideFooter = state;
+    });
   }
 }

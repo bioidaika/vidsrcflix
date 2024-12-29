@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../../../api/api.service';
 
 
@@ -14,7 +14,8 @@ export class SearchComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private apiService: ApiService
+    private apiService: ApiService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +32,7 @@ export class SearchComponent implements OnInit {
       (response: any) => {
         this.searchResults = response.results.map((item: any) => {
           return {
-            link: item.media_type === 'movie' ? `/movie/${item.id}` : item.media_type === 'tv' ? `/tv/${item.id}` : `/person/${item.id}`,
+            link: item.media_type === 'movie' ? `movie/${item.id}` : item.media_type === 'tv' ? `tv/${item.id}` : `person/${item.id}`,
             imgSrc: item.poster_path ? `https://image.tmdb.org/t/p/w370_and_h556_bestv2${item.poster_path}` : '',
             title: item.title || item.name,
             rating: item.vote_average ? item.vote_average * 10 : 'N/A',
@@ -45,6 +46,9 @@ export class SearchComponent implements OnInit {
       }
     );
   }
-  
+
+  onCardClick(link: string) {
+    this.router.navigateByUrl(link);
+  }
 }
 

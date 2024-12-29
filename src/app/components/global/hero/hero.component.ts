@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild } from '@angular/core';
 import { ModalComponent } from '../modal/modal.component';
 import { ApiService } from '../../../api/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-hero',
@@ -12,7 +13,9 @@ export class HeroComponent {
 
   @ViewChild(ModalComponent) modal!: ModalComponent;
 
-  constructor(private apiService: ApiService){}
+  constructor(private apiService: ApiService,
+    private router: Router
+  ) { }
 
   openTrailer() {
     const mediaType = this.data.number_of_seasons ? 'tv' : 'movie';
@@ -32,5 +35,11 @@ export class HeroComponent {
         console.error('Error fetching YouTube video:', error);
       }
     );
+  }
+
+  onBackdropClickd(data: any) {
+    if (data.imdb_id) {
+      this.router.navigate([`/watch/${data.imdb_id}`]);
+    }
   }
 }
