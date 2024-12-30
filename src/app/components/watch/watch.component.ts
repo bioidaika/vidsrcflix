@@ -28,7 +28,7 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
       else {
         this.url = `https://vidsrc.cc/v2/embed/tv/${this.id}/${this.season}/${this.episode}`;
       }
-      this.url = `${this.url}?autoPlay=true`;
+      this.url = `${this.url}`;
     });
   }
 
