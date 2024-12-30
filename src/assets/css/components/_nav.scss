@@ -6,13 +6,13 @@
   bottom: 0;
   left: 0;
   z-index: 5;
-  height: 4.5rem;
+  height: 7rem;
   background-color: #000000;
 
   @media (min-width: $breakpoint-large) {
     top: 0;
     right: auto;
-    width: 10rem;
+    width: 8rem;
     height: 100%;
     border-right: 1px solid $secondary-color;
   }
