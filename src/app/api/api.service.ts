@@ -12,7 +12,7 @@ export class ApiService {
   private eztvUrl = 'https://eztvx.to';
   private apiKey = ''; // your API key
   private language = 'en-US';
-
+  private releaseTypes = '4|5|6';
 
   constructor(private http: HttpClient) { }
 
@@ -140,7 +140,10 @@ export class ApiService {
   }
 
   private buildParams(params: any): HttpParams {
-    let httpParams = new HttpParams().set('api_key', this.apiKey).set('language', this.language);
+    let httpParams = new HttpParams()
+      .set('api_key', this.apiKey)
+      .set('language', this.language)
+      .set('with_release_type', this.releaseTypes);
     for (const key in params) {
       if (params.hasOwnProperty(key)) {
         httpParams = httpParams.set(key, params[key]);
