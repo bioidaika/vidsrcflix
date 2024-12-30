@@ -1,15 +1,12 @@
 @import '../../../assets/css/utilities/variables';
 
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #000;
 }
 
 .iframe-container {
     height: 95vh;
-    width: 100vw;
+    width: 100%;
     margin: auto;
     border: none;
 }
