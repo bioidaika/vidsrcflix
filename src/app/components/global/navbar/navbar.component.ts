@@ -83,13 +83,13 @@ export class NavbarComponent {
     this.goToRoute();
   }
 
-  @HostListener('document:click', ['$event'])
-  onClick(event: Event): void {
-    const targetElement = event.target as HTMLElement;
+  // @HostListener('document:click', ['$event'])
+  // onClick(event: Event): void {
+  //   const targetElement = event.target as HTMLElement;
 
-    // Close the search bar if the click is outside the navbar
-    if (this.searchVisible && !targetElement.closest('.navbar')) {
-      this.closeSearch();
-    }
-  }
+  //   // Close the search bar if the click is outside the navbar
+  //   if (this.searchVisible && !targetElement.closest('.navbar')) {
+  //     this.closeSearch();
+  //   }
+  // }
 }
