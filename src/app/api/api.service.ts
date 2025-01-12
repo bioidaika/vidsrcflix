@@ -10,7 +10,7 @@ export class ApiService {
   private apiUrl = 'https://api.themoviedb.org/3';
   private ytsUrl = 'https://yts.mx';
   private eztvUrl = 'https://eztvx.to';
-  private apiKey = ''; // your API key
+  private apiKey = 'dd4d819639705d332d531217b4f7c6b6';
   private language = 'en-US';
   private releaseTypes = '4|5|6';
 

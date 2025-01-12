@@ -23,10 +23,10 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
       this.season = params['season'] ? +params['season'] : undefined;
       this.episode = params['episode'] ? +params['episode'] : undefined;
       if (!this.season && !this.episode) {
-        this.url = `https://vidsrc.cc/v2/embed/movie/${this.id}`;
+        this.url = `https://multiembed.mov/?video_id=${this.id}`;
       }
       else {
-        this.url = `https://vidsrc.cc/v2/embed/tv/${this.id}/${this.season}/${this.episode}`;
+        this.url = `https://multiembed.mov/?video_id=${this.id}&s=${this.season}&e=${this.episode}`;
       }
       this.url = `${this.url}`;
     });
