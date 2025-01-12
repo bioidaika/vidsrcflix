@@ -46,23 +46,7 @@ export class MoviesInfoComponent implements OnInit {
 
   getMovieInfo(id: number) {
     this.apiService.getMovie(id).subscribe((result: any) => {
-      this.movie_data = result;
-
-      // Fetch YouTube trailer video
-      this.apiService.getYouTubeVideo(id, 'movie').subscribe(
-        (videoRes: any) => {
-          const video = videoRes.results.find((vid: any) => vid.site === 'YouTube' && ['Trailer', 'Teaser', 'Clip'].includes(vid.type));
-          if (video) {
-            this.movie_data.videoId = video.key; // Set the video key in movie_data
-          } else {
-            console.warn('No trailer or relevant video found for this movie.');
-          }
-        },
-        videoError => {
-          console.error('Error fetching YouTube video:', videoError);
-        }
-      );
-
+      this.movie_data = result;      
       this.getExternal(id);
     });
   }
