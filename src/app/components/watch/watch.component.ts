@@ -55,7 +55,7 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
     if (iframe) {
       iframe.style.opacity = '1';
     }
-    this.requestFullscreen(iframe)
+    //this.requestFullscreen(iframe)
   };
 
   requestFullscreen(iframe: HTMLIFrameElement) {
