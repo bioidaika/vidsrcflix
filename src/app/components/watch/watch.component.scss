@@ -5,10 +5,16 @@
 }
 
 .iframe-container {
-    height: 95vh;
+    height: 100vh;
     width: 100%;
     margin: auto;
     border: none;
+}
+
+@media (orientation: portrait) {
+    .iframe-container {
+        height: 95vh;
+    }
 }
 
 ::ng-deep body {
