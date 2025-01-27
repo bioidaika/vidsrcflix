@@ -1,0 +1,11 @@
+version: '3.0'
+
+name: VidSrcFlix
+services:
+  vidsrcflix:
+    container_name: vidsrcflix
+    hostname: vidsrcflix
+    image: jarvisnexus/vidsrcflix:latest
+    ports:
+      - "2323:80"
+    restart: unless-stopped

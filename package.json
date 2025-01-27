@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "docker-push:latest": "npm run build && docker buildx build --tag=jarvisnexus/vidsrcflix:latest --platform=linux/arm64,linux/amd64,linux/arm/v7 --push ."
   },
   "private": true,
   "dependencies": {
