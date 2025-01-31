@@ -34,6 +34,11 @@ export class WatchComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.dataService.setHideNavAndFooter(true);
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .then(() => console.log("✅ Service Worker Registered"))
+        .catch(err => console.error("❌ SW Registration Failed:", err));
+    }
   }
 
   ngAfterViewInit(): void {

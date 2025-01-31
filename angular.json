@@ -37,7 +37,8 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/sw.js"
             ],
             "styles": [
               "node_modules/ngx-spinner/animations/ball-triangle-path.css",
@@ -104,7 +105,8 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              "src/manifest.webmanifest"
+              "src/manifest.webmanifest",
+              "src/sw.js"
             ],
             "styles": [
               "src/styles.scss"
