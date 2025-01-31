@@ -47,7 +47,6 @@ export class SliderComponent implements OnInit, OnDestroy {
     const mediaType = hero.number_of_seasons ? 'tv' : 'movie';
     this.apiService.getYouTubeVideo(hero.id, mediaType).subscribe(
       (response: any) => {
-        console.log('API Response:', response);  // Log the response
         const video = response.results.find((vid: any) => vid.site === 'YouTube' && ['Trailer', 'Teaser', 'Clip'].includes(vid.type));
         if (video) {
           const videoUrl = `https://www.youtube.com/embed/${video.key}?rel=0&autoplay=1&mute=1`;

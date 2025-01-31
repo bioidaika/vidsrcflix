@@ -40,7 +40,6 @@ export class SearchComponent implements OnInit {
             poster_path: item.poster_path
           };
         });
-        console.log(this.searchResults);
       },
       error => {
         console.error('Search failed', error);
