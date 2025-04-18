@@ -6,7 +6,7 @@
           <img alt="{{hero?.title || hero?.name}}" class="lazyload image"
             [src]="'https://image.tmdb.org/t/p/original/' + hero?.backdrop_path" (load)="onImageLoaded(i)"/>
           <div class="play" *ngIf="isImageLoaded(i)" (click)="onBackdropClicked(hero)">
-            <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 55 55">
+            <svg class="play-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 55 55">
               <circle cx="27.5" cy="27.5" r="26.75" fill="none" stroke="#fff" stroke-linecap="round"
                 stroke-linejoin="round" stroke-width="1.5"></circle>
               <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
