@@ -39,7 +39,7 @@ export class HeroComponent {
 
   onBackdropClickd(data: any) {
     if (this.mediaType === 'movie') {
-      this.router.navigate([`/watch/movie/${data.imdb_id}`]);
+      this.router.navigate([`/watch/movie/${data.id}`]);
     }
   }
 }
