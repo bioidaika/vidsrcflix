@@ -4,7 +4,15 @@
       <div class="backdrop">
         <div class="lazyloaded">
           <img alt="{{hero?.title || hero?.name}}" class="lazyload image"
-            src="https://image.tmdb.org/t/p/original/{{hero?.backdrop_path}}">
+            [src]="'https://image.tmdb.org/t/p/original/' + hero?.backdrop_path" />
+          <div class="play" (click)="onBackdropClicked(hero)">
+            <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" viewBox="0 0 55 55">
+              <circle cx="27.5" cy="27.5" r="26.75" fill="none" stroke="#fff" stroke-linecap="round"
+                stroke-linejoin="round" stroke-width="1.5"></circle>
+              <path fill="none" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M20.97 40.81L40.64 27.5 20.97 14.19v26.62z"></path>
+            </svg>
+          </div>
         </div>
       </div>
       <div class="pane">

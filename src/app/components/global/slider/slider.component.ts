@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, Input, ViewChild } from '@angular/core';
 import { trigger, transition, animate, style } from '@angular/animations';
 import { ModalComponent } from '../modal/modal.component';
 import { ApiService } from '../../../api/api.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-slider',
@@ -20,12 +21,16 @@ import { ApiService } from '../../../api/api.service';
   ]
 })
 export class SliderComponent implements OnInit, OnDestroy {
+
   @Input() data: any[] = [];
   current = 0;
   private intervalId: any;
   @ViewChild(ModalComponent) modal!: ModalComponent;
 
-  constructor(private apiService: ApiService){}
+  constructor(private apiService: ApiService,
+    private router: Router
+  ) {
+  }
 
   ngOnInit() {
     this.sliderTimer();
@@ -60,5 +65,10 @@ export class SliderComponent implements OnInit, OnDestroy {
         console.error('Error fetching YouTube video:', error);
       }
     );
+  }
+
+  onBackdropClicked(hero: any) {
+    console.log(hero);
+    this.router.navigate([`/watch/${hero.link}`]);
   }
 }  
