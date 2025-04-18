@@ -23,6 +23,7 @@ import { Router } from '@angular/router';
 export class SliderComponent implements OnInit, OnDestroy {
 
   @Input() data: any[] = [];
+  imageLoadSet = new Set<number>();
   current = 0;
   private intervalId: any;
   @ViewChild(ModalComponent) modal!: ModalComponent;
@@ -70,5 +71,13 @@ export class SliderComponent implements OnInit, OnDestroy {
   onBackdropClicked(hero: any) {
     console.log(hero);
     this.router.navigate([`/watch/${hero.link}`]);
+  }
+
+  onImageLoaded(index: number) {
+    this.imageLoadSet.add(index);
+  }
+
+  isImageLoaded(index: number): boolean {
+    return this.imageLoadSet.has(index);
   }
 }  
