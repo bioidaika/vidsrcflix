@@ -12,6 +12,7 @@ interface DownloadInfo {
   'Sheet Name': string;
   'Size': string;
   'Download Link': string;
+  'VMF Code': string;
 }
 
 @Injectable({
@@ -60,9 +61,14 @@ export class SpreadsheetService {
     
     // Kiểm tra cache trước khi gọi API
     if (this.cache[tmdbId] && now - this.cache[tmdbId].timestamp < this.CACHE_DURATION) {
+      const cachedData = this.cache[tmdbId].data.map(item => ({
+        ...item,
+        'VMF Code': item['VMF Code'] || 'N/A' // Đảm bảo trường mới luôn có giá trị
+      }));
+      
       this.downloadDataSubject.next({
         ...this.downloadDataSubject.value,
-        [tmdbId]: this.cache[tmdbId].data
+        [tmdbId]: cachedData
       });
       return;
     }
@@ -76,7 +82,11 @@ export class SpreadsheetService {
       this.getTvDownloadInfo(tmdbId, 1)
     ]).subscribe({
       next: ([data1, data2]) => {
-        const combinedData = [...data1, ...data2];
+        const combinedData = [...data1, ...data2].map(item => ({
+          ...item,
+          'VMF Code': item['VMF Code'] || 'N/A' // Đảm bảo trường mới luôn có giá trị
+        }));
+        
         const currentData = this.downloadDataSubject.value;
         
         // Chỉ cập nhật nếu dữ liệu thực sự thay đổi
@@ -105,10 +115,19 @@ export class SpreadsheetService {
           // Kiểm tra xem cache cũ có quá cũ không
           const cacheAge = now - oldCache.timestamp;
           if (cacheAge < this.CACHE_DURATION * 2) { // Cho phép sử dụng cache cũ gấp đôi thời gian cache bình thường
-            this.cache[tmdbId] = oldCache;
+            const cachedData = oldCache.data.map(item => ({
+              ...item,
+              'VMF Code': item['VMF Code'] || 'N/A' // Đảm bảo trường mới luôn có giá trị
+            }));
+            
+            this.cache[tmdbId] = {
+              data: cachedData,
+              timestamp: oldCache.timestamp
+            };
+            
             this.downloadDataSubject.next({
               ...this.downloadDataSubject.value,
-              [tmdbId]: oldCache.data
+              [tmdbId]: cachedData
             });
             console.log('Using old cache due to update failure for tmdbId:', tmdbId);
           } else {
@@ -239,6 +258,7 @@ export class SpreadsheetService {
                 }
                 
                 const size = movie[36]?.trim() || 'N/A';
+                const vmfCode = this.extractVMFCode(movie[8]?.trim() || ''); // Lấy từ cột I (index 8)
                 
                 if (!downloadLink) {
                   console.log('Skipping row - no download link');
@@ -248,7 +268,8 @@ export class SpreadsheetService {
                 const match: DownloadInfo = {
                   'Sheet Name': result.sheetName,
                   'Size': size,
-                  'Download Link': downloadLink
+                  'Download Link': downloadLink,
+                  'VMF Code': vmfCode
                 };
                 
                 console.log(`Adding match from sheet ${result.sheetName}:`, match);
@@ -334,6 +355,7 @@ export class SpreadsheetService {
                             }
                             
                             const size = movie[36]?.trim() || 'N/A';
+                            const vmfCode = this.extractVMFCode(movie[8]?.trim() || ''); // Lấy từ cột I (index 8)
                             
                             if (!downloadLink) {
                                 console.log('Skipping row - no download link');
@@ -343,7 +365,8 @@ export class SpreadsheetService {
                             const match: DownloadInfo = {
                                 'Sheet Name': result.sheetName,
                                 'Size': size,
-                                'Download Link': downloadLink
+                                'Download Link': downloadLink,
+                                'VMF Code': vmfCode
                             };
                             
                             console.log(`Adding match from sheet ${result.sheetName}:`, match);
@@ -362,5 +385,19 @@ export class SpreadsheetService {
             return of([]);
         })
     );
+  }
+
+  // Thêm hàm helper để trích xuất VMF Code từ URL
+  private extractVMFCode(url: string): string {
+    if (!url) return 'N/A';
+    
+    // Nếu URL là tinyurl, lấy phần cuối sau dấu /
+    if (url.includes('tinyurl.com/')) {
+      const parts = url.split('/');
+      return parts[parts.length - 1] || 'N/A';
+    }
+    
+    // Nếu không phải tinyurl, trả về giá trị gốc
+    return url;
   }
 } 

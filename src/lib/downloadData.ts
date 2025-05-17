@@ -8,6 +8,7 @@ export interface DownloadData {
   tmdbId: string;
   size: string;
   downloadLink: string;
+  newField: string;
 }
 
 export async function getDownloadData(): Promise<DownloadData[]> {
@@ -30,9 +31,10 @@ export async function getDownloadData(): Promise<DownloadData[]> {
     const tmdbIdIndex = headers.indexOf('TMDB ID');
     const sizeIndex = headers.indexOf('Size');
     const downloadLinkIndex = headers.indexOf('Download Link');
+    const newFieldIndex = headers.indexOf('New Field');
 
     // Validate required columns exist
-    if (tmdbIdIndex === -1 || sizeIndex === -1 || downloadLinkIndex === -1) {
+    if (tmdbIdIndex === -1 || sizeIndex === -1 || downloadLinkIndex === -1 || newFieldIndex === -1) {
       throw new Error('Required columns not found in spreadsheet');
     }
 
@@ -41,16 +43,18 @@ export async function getDownloadData(): Promise<DownloadData[]> {
       const tmdbId = row[tmdbIdIndex]?.toString().trim();
       const size = row[sizeIndex]?.toString().trim();
       const downloadLink = row[downloadLinkIndex]?.toString().trim();
+      const newField = row[newFieldIndex]?.toString().trim();
 
       // Only include rows that have all required data
-      if (!tmdbId || !size || !downloadLink) {
+      if (!tmdbId || !size || !downloadLink || !newField) {
         return null;
       }
 
       return {
         tmdbId,
         size,
-        downloadLink
+        downloadLink,
+        newField
       };
     }).filter((item: DownloadData | null): item is DownloadData => item !== null);
 
