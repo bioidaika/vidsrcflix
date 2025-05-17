@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../../api/api.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SpreadsheetService } from '../../services/spreadsheet.service';
 
 @Component({
   selector: 'app-tv-info',
   templateUrl: './tv-info.component.html',
   styleUrls: ['./tv-info.component.scss']
 })
-export class TvInfoComponent implements OnInit {
+export class TvInfoComponent implements OnInit, OnDestroy {
   id!: number;
   tv_data: any;
   external_data: any;
@@ -21,24 +22,72 @@ export class TvInfoComponent implements OnInit {
   posters: any[] = [];
   cast_data: any;
   recom_data: any[] = [];
+  person_data: any;
   type: 'tv' = 'tv';
-  
+  downloadData: any = null;
+  isLoading = false;
+  private previousId: number | null = null;
 
-  constructor(private apiService: ApiService, private router: ActivatedRoute, private spinner: NgxSpinnerService) {}
+  constructor(private apiService: ApiService, private router: ActivatedRoute, private spinner: NgxSpinnerService, private spreadsheetService: SpreadsheetService) {}
 
   ngOnInit() {
     this.router.params.subscribe((params: Params) => {
+      this.spinner.show();
       this.id = +params['id'];
+      
+      if (this.previousId !== this.id) {
+        this.activeTab = 'overview';
+      }
+      
+      this.previousId = this.id;
       this.getTvInfo(this.id);
       this.getTvVideos(this.id);
       this.getTvBackdrop(this.id);
-      this.getMovieCast(this.id);
-      this.getTvRecommended(this.id, 1); 
+      this.getTvCast(this.id);
+      this.getTvRecommended(this.id, 1);
+      setTimeout(() => {
+        this.spinner.hide();
+      }, 2000);
     });
   }
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    if (tab === 'download' && this.tv_data) {
+      this.loadDownloadInfo();
+    }
+  }
+
+  loadDownloadInfo() {
+    if (this.tv_data?.id) {
+      if (this.previousId && this.previousId !== this.tv_data.id) {
+        this.spreadsheetService.stopPolling();
+      }
+
+      this.isLoading = true;
+      this.downloadData = null;
+      
+      this.spreadsheetService.getDownloadData(this.tv_data.id).subscribe({
+        next: (data) => {
+          this.downloadData = data || [];
+          setTimeout(() => {
+            this.isLoading = false;
+          }, 100);
+        },
+        error: (error) => {
+          console.error('Error loading download info:', error);
+          this.downloadData = [];
+          this.isLoading = false;
+        }
+      });
+
+      this.spreadsheetService.startPolling(this.tv_data.id);
+      this.previousId = this.tv_data.id;
+    }
+  }
+
+  ngOnDestroy() {
+    this.spreadsheetService.stopPolling();
   }
 
   getTvInfo(id: number) {
@@ -84,7 +133,7 @@ export class TvInfoComponent implements OnInit {
     });
   }
 
-  getMovieCast(id: number) {
+  getTvCast(id: number) {
     this.apiService.getCredits(id, 'tv').subscribe(
       (res: any) => {
         this.cast_data = res.cast.map((item: any) => ({
@@ -117,6 +166,5 @@ export class TvInfoComponent implements OnInit {
       }
     );
   }
-
 
 }

@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ApiService } from '../../api/api.service';
 import { ActivatedRoute, Params } from '@angular/router';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { SpreadsheetService } from '../../services/spreadsheet.service';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-movies-info',
   templateUrl: './movies-info.component.html',
   styleUrls: ['./movies-info.component.scss']
 })
-export class MoviesInfoComponent implements OnInit {
+export class MoviesInfoComponent implements OnInit, OnDestroy {
   id!: number;
   movie_data: any;
   external_data: any;
@@ -21,14 +23,28 @@ export class MoviesInfoComponent implements OnInit {
   recom_data: any[] = [];
   person_data: any;
   type: 'movie' = 'movie';
+  downloadData: any = null;
+  isLoading = false;
+  private previousId: number | null = null;
 
-
-  constructor(private apiService: ApiService, private router: ActivatedRoute, private spinner: NgxSpinnerService) { }
+  constructor(
+    private apiService: ApiService, 
+    private router: ActivatedRoute, 
+    private spinner: NgxSpinnerService, 
+    private spreadsheetService: SpreadsheetService,
+    private titleService: Title
+  ) { }
 
   ngOnInit() {
     this.router.params.subscribe((params: Params) => {
       this.spinner.show();
       this.id = +params['id'];
+      
+      if (this.previousId !== this.id) {
+        this.activeTab = 'overview';
+      }
+      
+      this.previousId = this.id;
       this.getMovieInfo(this.id);
       this.getMovieVideos(this.id);
       this.getMoviesBackdrop(this.id);
@@ -42,11 +58,45 @@ export class MoviesInfoComponent implements OnInit {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    if (tab === 'download' && this.movie_data) {
+      this.loadDownloadInfo();
+    }
+  }
+
+  loadDownloadInfo() {
+    if (this.movie_data?.id) {
+      if (this.previousId && this.previousId !== this.movie_data.id) {
+        this.spreadsheetService.stopPolling();
+      }
+
+      this.isLoading = true;
+      this.downloadData = null;
+      
+      this.spreadsheetService.getMovieDownloadInfo(this.movie_data.id).subscribe({
+        next: (data) => {
+          this.downloadData = data || [];
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error loading download info:', error);
+          this.downloadData = [];
+          this.isLoading = false;
+        }
+      });
+
+      this.spreadsheetService.startPolling(this.movie_data.id);
+      this.previousId = this.movie_data.id;
+    }
+  }
+
+  ngOnDestroy() {
+    this.spreadsheetService.stopPolling();
   }
 
   getMovieInfo(id: number) {
     this.apiService.getMovie(id).subscribe((result: any) => {
       this.movie_data = result;      
+      this.titleService.setTitle(`Bioidaika - ${this.movie_data.title} (${new Date(this.movie_data.release_date).getFullYear()})`);
       this.getExternal(id);
     });
   }
@@ -112,6 +162,4 @@ export class MoviesInfoComponent implements OnInit {
       }
     );
   }
-
-
 }

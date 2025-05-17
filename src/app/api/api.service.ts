@@ -11,7 +11,7 @@ export class ApiService {
   private ytsUrl = 'https://yts.mx';
   private eztvUrl = 'https://eztvx.to';
   private apiKey = 'dd4d819639705d332d531217b4f7c6b6';
-  private language = 'en-US';
+  private language = 'vi-VN';
   private releaseTypes = '4|5|6';
 
   constructor(private http: HttpClient) { }
@@ -48,7 +48,10 @@ export class ApiService {
   }
 
   getYouTubeVideo(id: number, mediaType: string): Observable<any> {
-    const params = this.buildParams({});
+    const params = this.buildParams({
+      type: 'trailer',
+      include_video_language: 'en,vi'
+    });
     return this.http.get(`${this.apiUrl}/${mediaType}/${id}/videos`, { params })
       .pipe(catchError(this.handleError));
   }

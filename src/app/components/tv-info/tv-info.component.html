@@ -17,6 +17,10 @@
         (click)="setActiveTab('backdrop')">
         Photos
     </button>
+    <button type="button" id="download" class="buttonTab" [class.buttonActive]="activeTab === 'download'"
+        (click)="setActiveTab('download')">
+        Download
+    </button>
 </div>
 
 <div class="spacing">
@@ -35,6 +39,32 @@
 
     <div *ngIf="activeTab === 'backdrop'" id="backdrop">
         <app-images [backdrops]="backdrops" [posters]="posters"></app-images>
+    </div>
+
+    <div *ngIf="activeTab === 'download'" id="download">
+        <div class="spacing">
+            <div *ngIf="isLoading" class="loading">
+                <p>Đang tìm kiếm thông tin download...</p>
+            </div>
+            <div *ngIf="!isLoading && downloadData && downloadData.length > 0" class="download-info">
+                <div *ngFor="let download of downloadData" class="download-details">
+                    <div class="download-info-row">
+                        <div class="download-info-col">
+                            <p><strong>Sheet:</strong> {{download['Sheet Name']}}</p>
+                            <p><strong>Size:</strong> {{download['Size']}}</p>
+                        </div>
+                        <div class="download-actions">
+                            <a [href]="download['Download Link']" target="_blank" class="download-button">
+                                <i class="fas fa-download"></i> Download
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="!isLoading && (!downloadData || downloadData.length === 0)" class="no-download">
+                <p>Không tìm thấy thông tin download cho phim này.</p>
+            </div>
+        </div>
     </div>
 </div>
 
